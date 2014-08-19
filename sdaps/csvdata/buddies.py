@@ -121,11 +121,11 @@ class Text(model.buddy.Buddy):
             if self.obj.id_csv(box.id) in data:
                 box.csvdata.import_data(data[self.obj.id_csv(box.id)])
 
-class Mark(model.buddy.Buddy):
+class Option(model.buddy.Buddy):
 
     __metaclass__ = model.buddy.Register
     name = 'csvdata'
-    obj_class = model.questionnaire.Mark
+    obj_class = model.questionnaire.Option
 
     def export_header(self):
         return [self.obj.id_csv()]

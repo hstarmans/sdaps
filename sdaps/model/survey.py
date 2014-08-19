@@ -101,7 +101,7 @@ class Survey(object):
         self.global_id = None
         self.questionnaire_ids = list()
         self.index = 0
-        self.version = 3
+        self.version = 4
         self.defs = Defs()
 
     def add_questionnaire(self, questionnaire):
@@ -373,4 +373,25 @@ class Survey(object):
                 sheet.recognized = False
                 sheet.verified = False
 
-        self.version = 3
+        if self.version < 4:
+            from sdaps.model import questionnaire
+
+            # This version adds the Option type and renames Mark to Range
+            log.warn(msg % (3))
+
+            for qobject in self.questionnaire.qobjects:
+                if isinstance(qobject, questionnaire.Question):
+                    self.variable = None
+
+                    for i, box in enumerate(qobject.boxes):
+                        box.key = None
+                        box.value = None
+
+                if isinstance(qobject, questionnaire.Range):
+                    qobject.range = (0, len(qobject.boxes)-1)
+
+                    for i, box in enumerate(qobject.boxes):
+                        box.value = i + 1
+
+        self.version = 4
+
